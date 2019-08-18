@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.ArrayList;
 
 public class HangmanUI extends JPanel {
 	/**
@@ -23,50 +24,23 @@ public class HangmanUI extends JPanel {
 	JPanel buttonsPanel;
 	
 	JLabel welcomeMessageLabel;
-	JLabel description1Label;
-	JLabel description2Label;
-	JLabel description3Label;
-	JLabel description4Label;
+	JTextArea descriptionTextArea;
 	JLabel resultMessageLabel;
 	JLabel guessingWordLabel;
 	JLabel hangmanPic;
 	
-	JButton aButton;
-    JButton bButton;
-    JButton cButton;
-    JButton dButton;
-    JButton eButton;
-    JButton fButton;
-    JButton gButton;
-    JButton hButton;
-    JButton iButton;
-    JButton jButton;
-    JButton kButton;
-    JButton lButton;
-    JButton mButton;
-    
-    JButton nButton;
-    JButton oButton;
-    JButton pButton;
-    JButton qButton;
-    JButton rButton;
-    JButton sButton;
-    JButton tButton;
-    JButton uButton;
-    JButton vButton;
-    JButton wButton;
-    JButton xButton;
-    JButton yButton;
-    JButton zButton;
+	ArrayList<JButton> letterButtons1;
+	ArrayList<JButton> letterButtons2;
 	
 	JButton newGameButton; // To be supported soon
 	JButton closeButton;
+	
+	JFrame theFrame;
 	
 	public HangmanUI() {
 		this.makeAllComponents();
 		this.initUIAndGame();
 	}
-	
 	public void makeAllComponents() {
 		this.welcomeMessagePanel = new JPanel();
 		this.descriptionPanel = new JPanel();
@@ -78,43 +52,28 @@ public class HangmanUI extends JPanel {
 		this.buttonsPanel = new JPanel();
 		
 		this.welcomeMessageLabel = new JLabel();
-		this.description1Label = new JLabel();
-		this.description2Label = new JLabel();
-		this.description3Label = new JLabel();
-		this.description4Label = new JLabel();
+		this.descriptionTextArea = new JTextArea(3, 60);
 		this.resultMessageLabel = new JLabel();
 		this.guessingWordLabel = new JLabel();
 		this.hangmanPic = new JLabel();
 		
-		this.aButton = new JButton("a");
-		this.bButton = new JButton("b");
-		this.cButton = new JButton("c");
-		this.dButton = new JButton("d");
-		this.eButton = new JButton("e");
-		this.fButton = new JButton("f");
-		this.gButton = new JButton("g");
-		this.hButton = new JButton("h");
-		this.iButton = new JButton("i");
-		this.jButton = new JButton("j");
-		this.kButton = new JButton("k");
-		this.lButton = new JButton("l");
-		this.mButton = new JButton("m");
-	    
-		this.nButton = new JButton("n");
-		this.oButton = new JButton("o");
-		this.pButton = new JButton("p");
-		this.qButton = new JButton("q");
-		this.rButton = new JButton("r");
-		this.sButton = new JButton("s");
-		this.tButton = new JButton("t");
-		this.uButton = new JButton("u");
-		this.vButton = new JButton("v");
-		this.wButton = new JButton("w");
-		this.xButton = new JButton("x");
-		this.yButton = new JButton("y");
-		this.zButton = new JButton("z");
+		this.letterButtons1 = new ArrayList<JButton>();
+		this.letterButtons2 = new ArrayList<JButton>();
+		for (int i = 0; i < 13; i++) {
+			this.letterButtons1.add(new JButton((char)('a' + i) + ""));
+		}
+		for (int i = 13; i < 26; i++) {
+			this.letterButtons2.add(new JButton((char)('a' + i) + ""));
+		}
 		
+		this.newGameButton = new JButton("New Game");
 		this.closeButton = new JButton("Close");
+		
+		this.theFrame = new JFrame("Hangman");
+		this.theFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.theFrame.setContentPane(this);
+		this.theFrame.setPreferredSize(new Dimension(800, 700));
+		this.theFrame.pack();
 	}
 	
 	public void initUIAndGame() {
@@ -135,43 +94,31 @@ public class HangmanUI extends JPanel {
 		
 		this.welcomeMessageLabel.setText("Welcome to the Hangman Game");
 		this.welcomeMessageLabel.setFont(quizBigFont);
-		this.description1Label.setText("Directions: You");
-		this.description2Label.setText("must guess the letters in the result word. If you get it right, it will reveal the locations of ");
-		this.description3Label.setText("the letter you just guessed. If you get it wrong, a new part of the hangman will be drawn. You ");
-		this.description4Label.setText("lose if hangman is fully drawn. You win if you have guessed the full word before the man is fully hung. Good luck :)");
+		this.descriptionTextArea.setWrapStyleWord(true);
+		this.descriptionTextArea.setLineWrap(true);
+		this.descriptionTextArea.setOpaque(false);
+		this.descriptionTextArea.setEditable(false);
+		this.descriptionTextArea.setFocusable(false);
+	    this.descriptionTextArea.setBackground(UIManager.getColor("Label.background"));
+	    this.descriptionTextArea.setFont(UIManager.getFont("Label.font"));
+	    this.descriptionTextArea.setBorder(UIManager.getBorder("Label.border"));
+		this.descriptionTextArea.setText("Directions: You must guess the letters in the result word. If you get it right, it will reveal the locations of "
+				+ "the letter you just guessed. If you get it wrong, a new part of the hangman will be drawn. You "
+				+ "lose if hangman is fully drawn. You win if you have guessed the full word before the man is fully hung. Good luck :)");
 		this.resultMessageLabel.setText("");
 		this.resultMessageLabel.setFont(quizMidFont);
 		this.guessingWordLabel.setText(this.hangmanGame.getCheckingWord());
 		this.guessingWordLabel.setFont(quizBigFont);
 		
-		this.aButton.addActionListener(new LetterButtonListener());
-		this.bButton.addActionListener(new LetterButtonListener());
-		this.cButton.addActionListener(new LetterButtonListener());
-		this.dButton.addActionListener(new LetterButtonListener());
-		this.eButton.addActionListener(new LetterButtonListener());
-		this.fButton.addActionListener(new LetterButtonListener());
-		this.gButton.addActionListener(new LetterButtonListener());
-		this.hButton.addActionListener(new LetterButtonListener());
-		this.iButton.addActionListener(new LetterButtonListener());
-		this.jButton.addActionListener(new LetterButtonListener());
-		this.kButton.addActionListener(new LetterButtonListener());
-		this.lButton.addActionListener(new LetterButtonListener());
-		this.mButton.addActionListener(new LetterButtonListener());
-		this.nButton.addActionListener(new LetterButtonListener());
-		this.oButton.addActionListener(new LetterButtonListener());
-		this.pButton.addActionListener(new LetterButtonListener());
-		this.qButton.addActionListener(new LetterButtonListener());
-		this.rButton.addActionListener(new LetterButtonListener());
-		this.sButton.addActionListener(new LetterButtonListener());
-		this.tButton.addActionListener(new LetterButtonListener());
-		this.uButton.addActionListener(new LetterButtonListener());
-		this.vButton.addActionListener(new LetterButtonListener());
-		this.wButton.addActionListener(new LetterButtonListener());
-		this.xButton.addActionListener(new LetterButtonListener());
-		this.yButton.addActionListener(new LetterButtonListener());
-		this.zButton.addActionListener(new LetterButtonListener());
+		for (int i = 0; i < this.letterButtons1.size(); i++) {
+			this.letterButtons1.get(i).addActionListener(new LetterButtonListener());
+		}
+		for (int i = 0; i < this.letterButtons2.size(); i++) {
+			this.letterButtons2.get(i).addActionListener(new LetterButtonListener());
+		}
 		
 		this.closeButton.addActionListener(new CloseButtonListener());
+		this.newGameButton.addActionListener(new NewGameButtonListener());
 		
 		try {
 			BufferedImage myPicture = ImageIO.read(new File("src/man0.png"));
@@ -185,40 +132,18 @@ public class HangmanUI extends JPanel {
 		}
 		
 		this.welcomeMessagePanel.add(this.welcomeMessageLabel);
-		this.descriptionPanel.add(this.description1Label);
-		this.descriptionPanel.add(this.description2Label);
-		this.descriptionPanel.add(this.description3Label);
-		this.descriptionPanel.add(this.description4Label);
-		this.alphabetPanel1.add(this.aButton);
-		this.alphabetPanel1.add(this.bButton);
-		this.alphabetPanel1.add(this.cButton);
-		this.alphabetPanel1.add(this.dButton);
-		this.alphabetPanel1.add(this.eButton);
-		this.alphabetPanel1.add(this.fButton);
-		this.alphabetPanel1.add(this.gButton);
-		this.alphabetPanel1.add(this.hButton);
-		this.alphabetPanel1.add(this.iButton);
-		this.alphabetPanel1.add(this.jButton);
-		this.alphabetPanel1.add(this.kButton);
-		this.alphabetPanel1.add(this.lButton);
-		this.alphabetPanel1.add(this.mButton);
-		this.alphabetPanel2.add(this.nButton);
-		this.alphabetPanel2.add(this.oButton);
-		this.alphabetPanel2.add(this.pButton);
-		this.alphabetPanel2.add(this.qButton);
-		this.alphabetPanel2.add(this.rButton);
-		this.alphabetPanel2.add(this.sButton);
-		this.alphabetPanel2.add(this.tButton);
-		this.alphabetPanel2.add(this.uButton);
-		this.alphabetPanel2.add(this.vButton);
-		this.alphabetPanel2.add(this.wButton);
-		this.alphabetPanel2.add(this.xButton);
-		this.alphabetPanel2.add(this.yButton);
-		this.alphabetPanel2.add(this.zButton);
+		this.descriptionPanel.add(this.descriptionTextArea);
+		for (int i = 0; i < this.letterButtons1.size(); i++) {
+			this.alphabetPanel1.add(this.letterButtons1.get(i));
+		}
+		for (int i = 0; i < this.letterButtons2.size(); i++) {
+			this.alphabetPanel2.add(this.letterButtons2.get(i));
+		}
 		this.guessingWordPanel.add(this.guessingWordLabel);
 		this.resultMessagePanel.add(this.resultMessageLabel);
 		this.hangmanImagePanel.add(this.hangmanPic);
 		this.buttonsPanel.add(this.closeButton);
+		this.buttonsPanel.add(this.newGameButton);
 		
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		this.add(this.welcomeMessagePanel);
@@ -232,41 +157,20 @@ public class HangmanUI extends JPanel {
 	}
 	
 	public void display() {
-		JFrame theFrame = new JFrame("Hangman");
-		theFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		theFrame.setContentPane(this);
-		theFrame.setPreferredSize(new Dimension(1000, 900));
-		theFrame.pack();
 		theFrame.setVisible(true);
 	}
 	
+	public void hide() {
+		theFrame.setVisible(false);
+	}
+	
 	public void disableAllAlphabetButtons() {
-		this.aButton.setEnabled(false);
-		this.bButton.setEnabled(false);
-		this.cButton.setEnabled(false);
-		this.dButton.setEnabled(false);
-		this.eButton.setEnabled(false);
-		this.fButton.setEnabled(false);
-		this.gButton.setEnabled(false);
-		this.hButton.setEnabled(false);
-		this.iButton.setEnabled(false);
-		this.jButton.setEnabled(false);
-		this.kButton.setEnabled(false);
-		this.lButton.setEnabled(false);
-		this.mButton.setEnabled(false);
-		this.nButton.setEnabled(false);
-		this.oButton.setEnabled(false);
-		this.pButton.setEnabled(false);
-		this.qButton.setEnabled(false);
-		this.rButton.setEnabled(false);
-		this.sButton.setEnabled(false);
-		this.tButton.setEnabled(false);
-		this.uButton.setEnabled(false);
-		this.vButton.setEnabled(false);
-		this.wButton.setEnabled(false);
-		this.xButton.setEnabled(false);
-		this.yButton.setEnabled(false);
-		this.zButton.setEnabled(false);
+		for (int i = 0; i < this.letterButtons1.size(); i++) {
+			this.letterButtons1.get(i).setEnabled(false);
+		}
+		for (int i = 0; i < this.letterButtons2.size(); i++) {
+			this.letterButtons2.get(i).setEnabled(false);
+		}
 	}
 	
 	class LetterButtonListener implements ActionListener {
@@ -312,6 +216,11 @@ public class HangmanUI extends JPanel {
 	class CloseButtonListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			System.exit(0);
+		}
+	}
+	class NewGameButtonListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			Main.resetGame();
 		}
 	}
 }
